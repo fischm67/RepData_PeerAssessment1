@@ -57,7 +57,7 @@ print(sum_steps_xt, type = "html", include.rownames = FALSE)
 ```
 
 <!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Sun Jan 10 11:35:39 2016 -->
+<!-- Sun Jan 10 13:03:23 2016 -->
 <table border=1>
 <tr> <th> date </th> <th> Sum_steps </th>  </tr>
   <tr> <td> 2012-10-01 </td> <td align="right"> 0 </td> </tr>
@@ -84,94 +84,20 @@ axis(side = 1, at = seq(0,21500,500), labels = seq(0,21500,500))
 
 ![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 
-Utilizing the dplyr package I created a new table to calculate the mean and median
-number of steps taken by day.  The mean values look accurate but the median data
-is greatly affected by hours spent sleeping or resting.
+The mean and median for the steps per day is:
 
 
 ```r
-mean_med_steps <- activity %>%
-    group_by(date) %>%
-    summarise_each(funs(mean(., na.rm=TRUE), median(., na.rm=TRUE)), steps)
+mean(sum_steps$Sum_steps, na.rm = TRUE)
 ```
 
-The entire table with the computed mean and median for each day is displayed below
-and the r code to display the table
-
+[1] 9354.23
 
 ```r
-library(xtable)
-mean_med_steps$date <- as.character(mean_med_steps$date)
-mean_med_steps_xt <- xtable(mean_med_steps, comment = FALSE, auto = TRUE)
-print(mean_med_steps_xt, type = "html", include.rownames = FALSE)
+median(sum_steps$Sum_steps, na.rm = TRUE)
 ```
 
-<!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Sun Jan 10 11:35:39 2016 -->
-<table border=1>
-<tr> <th> date </th> <th> mean </th> <th> median </th>  </tr>
-  <tr> <td> 2012-10-01 </td> <td align="right">  </td> <td align="right">  </td> </tr>
-  <tr> <td> 2012-10-02 </td> <td align="right"> 0.4375000 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-03 </td> <td align="right"> 39.4166667 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-04 </td> <td align="right"> 42.0694444 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-05 </td> <td align="right"> 46.1597222 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-06 </td> <td align="right"> 53.5416667 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-07 </td> <td align="right"> 38.2465278 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-08 </td> <td align="right">  </td> <td align="right">  </td> </tr>
-  <tr> <td> 2012-10-09 </td> <td align="right"> 44.4826389 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-10 </td> <td align="right"> 34.3750000 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-11 </td> <td align="right"> 35.7777778 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-12 </td> <td align="right"> 60.3541667 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-13 </td> <td align="right"> 43.1458333 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-14 </td> <td align="right"> 52.4236111 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-15 </td> <td align="right"> 35.2048611 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-16 </td> <td align="right"> 52.3750000 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-17 </td> <td align="right"> 46.7083333 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-18 </td> <td align="right"> 34.9166667 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-19 </td> <td align="right"> 41.0729167 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-20 </td> <td align="right"> 36.0937500 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-21 </td> <td align="right"> 30.6284722 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-22 </td> <td align="right"> 46.7361111 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-23 </td> <td align="right"> 30.9652778 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-24 </td> <td align="right"> 29.0104167 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-25 </td> <td align="right"> 8.6527778 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-26 </td> <td align="right"> 23.5347222 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-27 </td> <td align="right"> 35.1354167 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-28 </td> <td align="right"> 39.7847222 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-29 </td> <td align="right"> 17.4236111 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-30 </td> <td align="right"> 34.0937500 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-10-31 </td> <td align="right"> 53.5208333 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-01 </td> <td align="right">  </td> <td align="right">  </td> </tr>
-  <tr> <td> 2012-11-02 </td> <td align="right"> 36.8055556 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-03 </td> <td align="right"> 36.7048611 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-04 </td> <td align="right">  </td> <td align="right">  </td> </tr>
-  <tr> <td> 2012-11-05 </td> <td align="right"> 36.2465278 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-06 </td> <td align="right"> 28.9375000 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-07 </td> <td align="right"> 44.7326389 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-08 </td> <td align="right"> 11.1770833 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-09 </td> <td align="right">  </td> <td align="right">  </td> </tr>
-  <tr> <td> 2012-11-10 </td> <td align="right">  </td> <td align="right">  </td> </tr>
-  <tr> <td> 2012-11-11 </td> <td align="right"> 43.7777778 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-12 </td> <td align="right"> 37.3784722 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-13 </td> <td align="right"> 25.4722222 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-14 </td> <td align="right">  </td> <td align="right">  </td> </tr>
-  <tr> <td> 2012-11-15 </td> <td align="right"> 0.1423611 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-16 </td> <td align="right"> 18.8923611 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-17 </td> <td align="right"> 49.7881944 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-18 </td> <td align="right"> 52.4652778 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-19 </td> <td align="right"> 30.6979167 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-20 </td> <td align="right"> 15.5277778 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-21 </td> <td align="right"> 44.3993056 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-22 </td> <td align="right"> 70.9270833 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-23 </td> <td align="right"> 73.5902778 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-24 </td> <td align="right"> 50.2708333 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-25 </td> <td align="right"> 41.0902778 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-26 </td> <td align="right"> 38.7569444 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-27 </td> <td align="right"> 47.3819444 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-28 </td> <td align="right"> 35.3576389 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-29 </td> <td align="right"> 24.4687500 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td> 2012-11-30 </td> <td align="right">  </td> <td align="right">  </td> </tr>
-   </table>
+[1] 10395
 
 ## What is the average daily activity pattern?
 
@@ -202,7 +128,7 @@ axis.POSIXct(1, at=seq(as.POSIXlt(min(mean_int_steps$hour_minutes)),as.POSIXlt(m
     labels=format(seq(as.POSIXlt(min(mean_int_steps$hour_minutes)),as.POSIXlt(max(mean_int_steps$hour_minutes)), by="hour"), "%H:%M"))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-8-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
 
 The entire table with the time series data for each interval is displayed below
 and the r code to display the table
@@ -219,7 +145,7 @@ print(mean_int_steps_xt, type = "html", include.rownames = FALSE)
 ```
 
 <!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Sun Jan 10 11:35:39 2016 -->
+<!-- Sun Jan 10 13:03:23 2016 -->
 <table border=1>
 <tr> <th> hour_minutes </th> <th> Mean_steps </th>  </tr>
   <tr> <td> 00:00:00 </td> <td align="right"> 1.7169811 </td> </tr>
@@ -518,6 +444,15 @@ of steps taken **occurs between 8:30 to 8:35.**
 
 ## Imputing missing values
 
+How many rows have missing data (NA):
+
+
+```r
+sum(is.na(activity$steps))
+```
+
+[1] 2304
+
 There is a signficant amount of days where the activity monitor was not worn or
 taken off resulting in no data collection.  To replace the NA data values I 
 created a replacement vector which repeats the average number of steps taken 
@@ -570,7 +505,7 @@ print(sum_steps_new_xt, type = "html", include.rownames = FALSE)
 ```
 
 <!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Sun Jan 10 11:35:40 2016 -->
+<!-- Sun Jan 10 13:03:23 2016 -->
 <table border=1>
 <tr> <th> date </th> <th> Sum_steps </th>  </tr>
   <tr> <td> 2012-10-01 </td> <td align="right"> 10766.18867925 </td> </tr>
@@ -597,99 +532,22 @@ axis(side = 1, at = seq(0,21500,500), labels = seq(0,21500,500))
 
 ![](PA1_template_files/figure-html/unnamed-chunk-13-1.png) 
 
-Utilizing the dplyr package I calculated the new mean and median step date
-with the step data replaced.
+The mean and median for the replaced steps per day is:
 
 
 ```r
-mean_med_steps_new <- activity_new %>%
-    group_by(date) %>%
-    summarise_each(funs(mean(., na.rm=TRUE), median(., na.rm=TRUE)), new_steps)
+mean(sum_steps_new$Sum_steps, na.rm = TRUE)
 ```
 
-The entire table with the new computed mean and median for each day is displayed below
-and the r code to display the table
-
+[1] 10766.19
 
 ```r
-library(xtable)
-mean_med_steps_new$date <- as.character(mean_med_steps_new$date)
-mean_med_steps_new_xt <- xtable(mean_med_steps_new, comment = FALSE, auto = TRUE)
-print(mean_med_steps_new_xt, type = "html", include.rownames = FALSE)
+median(sum_steps_new$Sum_steps, na.rm = TRUE)
 ```
 
-<!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Sun Jan 10 11:35:40 2016 -->
-<table border=1>
-<tr> <th> date </th> <th> mean </th> <th> median </th>  </tr>
-  <tr> <td> 2012-10-01 </td> <td align="right"> 37.3825996 </td> <td align="right"> 34.11320755 </td> </tr>
-  <tr> <td> 2012-10-02 </td> <td align="right"> 0.4375000 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-03 </td> <td align="right"> 39.4166667 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-04 </td> <td align="right"> 42.0694444 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-05 </td> <td align="right"> 46.1597222 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-06 </td> <td align="right"> 53.5416667 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-07 </td> <td align="right"> 38.2465278 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-08 </td> <td align="right"> 37.3825996 </td> <td align="right"> 34.11320755 </td> </tr>
-  <tr> <td> 2012-10-09 </td> <td align="right"> 44.4826389 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-10 </td> <td align="right"> 34.3750000 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-11 </td> <td align="right"> 35.7777778 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-12 </td> <td align="right"> 60.3541667 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-13 </td> <td align="right"> 43.1458333 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-14 </td> <td align="right"> 52.4236111 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-15 </td> <td align="right"> 35.2048611 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-16 </td> <td align="right"> 52.3750000 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-17 </td> <td align="right"> 46.7083333 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-18 </td> <td align="right"> 34.9166667 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-19 </td> <td align="right"> 41.0729167 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-20 </td> <td align="right"> 36.0937500 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-21 </td> <td align="right"> 30.6284722 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-22 </td> <td align="right"> 46.7361111 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-23 </td> <td align="right"> 30.9652778 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-24 </td> <td align="right"> 29.0104167 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-25 </td> <td align="right"> 8.6527778 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-26 </td> <td align="right"> 23.5347222 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-27 </td> <td align="right"> 35.1354167 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-28 </td> <td align="right"> 39.7847222 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-29 </td> <td align="right"> 17.4236111 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-30 </td> <td align="right"> 34.0937500 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-10-31 </td> <td align="right"> 53.5208333 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-01 </td> <td align="right"> 37.3825996 </td> <td align="right"> 34.11320755 </td> </tr>
-  <tr> <td> 2012-11-02 </td> <td align="right"> 36.8055556 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-03 </td> <td align="right"> 36.7048611 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-04 </td> <td align="right"> 37.3825996 </td> <td align="right"> 34.11320755 </td> </tr>
-  <tr> <td> 2012-11-05 </td> <td align="right"> 36.2465278 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-06 </td> <td align="right"> 28.9375000 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-07 </td> <td align="right"> 44.7326389 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-08 </td> <td align="right"> 11.1770833 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-09 </td> <td align="right"> 37.3825996 </td> <td align="right"> 34.11320755 </td> </tr>
-  <tr> <td> 2012-11-10 </td> <td align="right"> 37.3825996 </td> <td align="right"> 34.11320755 </td> </tr>
-  <tr> <td> 2012-11-11 </td> <td align="right"> 43.7777778 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-12 </td> <td align="right"> 37.3784722 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-13 </td> <td align="right"> 25.4722222 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-14 </td> <td align="right"> 37.3825996 </td> <td align="right"> 34.11320755 </td> </tr>
-  <tr> <td> 2012-11-15 </td> <td align="right"> 0.1423611 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-16 </td> <td align="right"> 18.8923611 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-17 </td> <td align="right"> 49.7881944 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-18 </td> <td align="right"> 52.4652778 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-19 </td> <td align="right"> 30.6979167 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-20 </td> <td align="right"> 15.5277778 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-21 </td> <td align="right"> 44.3993056 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-22 </td> <td align="right"> 70.9270833 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-23 </td> <td align="right"> 73.5902778 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-24 </td> <td align="right"> 50.2708333 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-25 </td> <td align="right"> 41.0902778 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-26 </td> <td align="right"> 38.7569444 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-27 </td> <td align="right"> 47.3819444 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-28 </td> <td align="right"> 35.3576389 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-29 </td> <td align="right"> 24.4687500 </td> <td align="right"> 0.00000000 </td> </tr>
-  <tr> <td> 2012-11-30 </td> <td align="right"> 37.3825996 </td> <td align="right"> 34.11320755 </td> </tr>
-   </table>
-&nbsp;
+[1] 10766.19
 
-With the missing data replaced the histogram distribution was moved more towards
-the overall average number of steps per day. This makes sense since the previous
-days with no data are now set at the average.  Separate from the days with no data,
-replacing the missing values did not have much an effect on the mean or median data.
+With the missing data replaced the mean and median data are the same.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -730,7 +588,7 @@ axis.POSIXct(1, at=seq(as.POSIXlt(min(ave_steps_new$hour_minutes)),as.POSIXlt(ma
     labels=format(seq(as.POSIXlt(min(ave_steps_new$hour_minutes)),as.POSIXlt(max(ave_steps_new$hour_minutes)), by="hour"), "%H:%M"))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-17-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-16-1.png) 
 &nbsp;&nbsp;
 
 

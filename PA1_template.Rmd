@@ -67,24 +67,11 @@ hist(sum_steps$Sum_steps, main = "Number of steps taken per day", xlab = "Number
 axis(side = 1, at = seq(0,21500,500), labels = seq(0,21500,500))
 ```
 
-Utilizing the dplyr package I created a new table to calculate the mean and median
-number of steps taken by day.  The mean values look accurate but the median data
-is greatly affected by hours spent sleeping or resting.
+The mean and median for the steps per day is:
 
 ```{r, results='asis'}
-mean_med_steps <- activity %>%
-    group_by(date) %>%
-    summarise_each(funs(mean(., na.rm=TRUE), median(., na.rm=TRUE)), steps)
-```
-
-The entire table with the computed mean and median for each day is displayed below
-and the r code to display the table
-
-```{r, results='asis'}
-library(xtable)
-mean_med_steps$date <- as.character(mean_med_steps$date)
-mean_med_steps_xt <- xtable(mean_med_steps, comment = FALSE, auto = TRUE)
-print(mean_med_steps_xt, type = "html", include.rownames = FALSE)
+mean(sum_steps$Sum_steps, na.rm = TRUE)
+median(sum_steps$Sum_steps, na.rm = TRUE)
 ```
 
 ## What is the average daily activity pattern?
@@ -132,6 +119,12 @@ From both the plot and inspection of the raw data, you can see the peak average 
 of steps taken **occurs between 8:30 to 8:35.**
 
 ## Imputing missing values
+
+How many rows have missing data (NA):
+
+```{r, results='asis'}
+sum(is.na(activity$steps))
+```
 
 There is a signficant amount of days where the activity monitor was not worn or
 taken off resulting in no data collection.  To replace the NA data values I 
@@ -190,30 +183,14 @@ hist(sum_steps_new$Sum_steps, main = "Number of steps taken per day with NA valu
 axis(side = 1, at = seq(0,21500,500), labels = seq(0,21500,500))
 ```
 
-Utilizing the dplyr package I calculated the new mean and median step date
-with the step data replaced.
+The mean and median for the replaced steps per day is:
 
 ```{r, results='asis'}
-mean_med_steps_new <- activity_new %>%
-    group_by(date) %>%
-    summarise_each(funs(mean(., na.rm=TRUE), median(., na.rm=TRUE)), new_steps)
+mean(sum_steps_new$Sum_steps, na.rm = TRUE)
+median(sum_steps_new$Sum_steps, na.rm = TRUE)
 ```
 
-The entire table with the new computed mean and median for each day is displayed below
-and the r code to display the table
-
-```{r, results='asis'}
-library(xtable)
-mean_med_steps_new$date <- as.character(mean_med_steps_new$date)
-mean_med_steps_new_xt <- xtable(mean_med_steps_new, comment = FALSE, auto = TRUE)
-print(mean_med_steps_new_xt, type = "html", include.rownames = FALSE)
-```
-&nbsp;
-
-With the missing data replaced the histogram distribution was moved more towards
-the overall average number of steps per day. This makes sense since the previous
-days with no data are now set at the average.  Separate from the days with no data,
-replacing the missing values did not have much an effect on the mean or median data.
+With the missing data replaced the mean and median data are the same.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
