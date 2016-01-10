@@ -42,8 +42,9 @@ I utilized the dplyr package to summarise the number of steps taken by day.
 
 ```r
 sum_steps <- activity %>%
+    filter(!is.na(steps)) %>%
     group_by(date) %>%
-    summarise(Sum_steps = sum(steps, na.rm=TRUE))
+    summarise(Sum_steps = sum(steps))
 ```
 
 Here are the first 10 rows of the output table and the r code to display the table
@@ -57,19 +58,19 @@ print(sum_steps_xt, type = "html", include.rownames = FALSE)
 ```
 
 <!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Sun Jan 10 13:03:23 2016 -->
+<!-- Sun Jan 10 13:41:51 2016 -->
 <table border=1>
 <tr> <th> date </th> <th> Sum_steps </th>  </tr>
-  <tr> <td> 2012-10-01 </td> <td align="right"> 0 </td> </tr>
   <tr> <td> 2012-10-02 </td> <td align="right"> 126 </td> </tr>
   <tr> <td> 2012-10-03 </td> <td align="right"> 11352 </td> </tr>
   <tr> <td> 2012-10-04 </td> <td align="right"> 12116 </td> </tr>
   <tr> <td> 2012-10-05 </td> <td align="right"> 13294 </td> </tr>
   <tr> <td> 2012-10-06 </td> <td align="right"> 15420 </td> </tr>
   <tr> <td> 2012-10-07 </td> <td align="right"> 11015 </td> </tr>
-  <tr> <td> 2012-10-08 </td> <td align="right"> 0 </td> </tr>
   <tr> <td> 2012-10-09 </td> <td align="right"> 12811 </td> </tr>
   <tr> <td> 2012-10-10 </td> <td align="right"> 9900 </td> </tr>
+  <tr> <td> 2012-10-11 </td> <td align="right"> 10304 </td> </tr>
+  <tr> <td> 2012-10-12 </td> <td align="right"> 17382 </td> </tr>
    </table>
 &nbsp;
 
@@ -91,13 +92,13 @@ The mean and median for the steps per day is:
 mean(sum_steps$Sum_steps, na.rm = TRUE)
 ```
 
-[1] 9354.23
+[1] 10766.19
 
 ```r
 median(sum_steps$Sum_steps, na.rm = TRUE)
 ```
 
-[1] 10395
+[1] 10765
 
 ## What is the average daily activity pattern?
 
@@ -145,7 +146,7 @@ print(mean_int_steps_xt, type = "html", include.rownames = FALSE)
 ```
 
 <!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Sun Jan 10 13:03:23 2016 -->
+<!-- Sun Jan 10 13:41:52 2016 -->
 <table border=1>
 <tr> <th> hour_minutes </th> <th> Mean_steps </th>  </tr>
   <tr> <td> 00:00:00 </td> <td align="right"> 1.7169811 </td> </tr>
@@ -440,7 +441,7 @@ print(mean_int_steps_xt, type = "html", include.rownames = FALSE)
 &nbsp;
 
 From both the plot and inspection of the raw data, you can see the peak average number 
-of steps taken **occurs between 8:30 to 8:35.**
+of steps taken **occurs between 8:30 to 8:35 or interval 835.**
 
 ## Imputing missing values
 
@@ -505,7 +506,7 @@ print(sum_steps_new_xt, type = "html", include.rownames = FALSE)
 ```
 
 <!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Sun Jan 10 13:03:23 2016 -->
+<!-- Sun Jan 10 13:41:52 2016 -->
 <table border=1>
 <tr> <th> date </th> <th> Sum_steps </th>  </tr>
   <tr> <td> 2012-10-01 </td> <td align="right"> 10766.18867925 </td> </tr>

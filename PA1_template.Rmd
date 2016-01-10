@@ -45,8 +45,9 @@ I utilized the dplyr package to summarise the number of steps taken by day.
 
 ```{r}
 sum_steps <- activity %>%
+    filter(!is.na(steps)) %>%
     group_by(date) %>%
-    summarise(Sum_steps = sum(steps, na.rm=TRUE))
+    summarise(Sum_steps = sum(steps))
 ```
 
 Here are the first 10 rows of the output table and the r code to display the table
@@ -116,7 +117,7 @@ print(mean_int_steps_xt, type = "html", include.rownames = FALSE)
 &nbsp;
 
 From both the plot and inspection of the raw data, you can see the peak average number 
-of steps taken **occurs between 8:30 to 8:35.**
+of steps taken **occurs between 8:30 to 8:35 or interval 835.**
 
 ## Imputing missing values
 
