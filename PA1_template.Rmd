@@ -5,21 +5,257 @@ output:
     keep_md: true
 ---
 
-
 ## Loading and preprocessing the data
 
+Assume that the activity dataset is in the current directory, the following code
+will load and process the data.
 
+```{r}
+# load packages
+suppressMessages(library(dplyr))
+suppressMessages(library(data.table))
+suppressMessages(library(xtable))
+suppressMessages(library(knitr))
+library(dplyr)
+library(data.table)
+library(xtable)
+library(knitr)
+
+activity <- read.csv("activity.csv", header = TRUE)
+
+# Convert the read in date data to class Date
+activity$date <- as.Date(activity$date)
+
+# Convert step data to type numeric
+activity$steps <- as.numeric(activity$steps)
+
+# Fixed the interval character width field to 4.  Needed for the next steps in the formatting
+activity$hour_minutes <- sprintf("%04d", activity$interval)
+
+# Format the new hour_minutes field in the format 00:00 so that it can be converted to POSIX class
+activity$hour_minutes <- format(strptime(activity$hour_minutes, format="%H%M"), format = "%H:%M")
+
+# Format a new datetime column with the date and hour_minutes columns converted to POSIXct class
+activity$datetime <- as.POSIXct(paste(activity$date, activity$hour_minutes), format = "%Y-%m-%d %H:%M")
+```
 
 ## What is mean total number of steps taken per day?
 
+I utilized the dplyr package to summarise the number of steps taken by day.
 
+```{r}
+sum_steps <- activity %>%
+    group_by(date) %>%
+    summarise(Sum_steps = sum(steps, na.rm=TRUE))
+```
+
+Here are the first 10 rows of the output table and the r code to display the table
+
+```{r, results='asis'}
+library(xtable)
+sum_steps$date <- sprintf("% 12s",as.character(sum_steps$date))
+sum_steps_xt <- xtable(sum_steps[1:10, ], comment = FALSE, auto = TRUE)
+print(sum_steps_xt, type = "html", include.rownames = FALSE)
+```
+&nbsp;
+
+The histogram showing the distribution of the total number of steps taken is shown below:
+
+```{r}
+hist(sum_steps$Sum_steps, main = "Number of steps taken per day", xlab = "Number of steps per day", 
+     ylab = "Occurences", border = "black", col = "blue", ylim = c(0,10), las = 1, breaks = 50, xaxt = "n")
+axis(side = 1, at = seq(0,21500,500), labels = seq(0,21500,500))
+```
+
+Utilizing the dplyr package I created a new table to calculate the mean and median
+number of steps taken by day.  The mean values look accurate but the median data
+is greatly affected by hours spent sleeping or resting.
+
+```{r, results='asis'}
+mean_med_steps <- activity %>%
+    group_by(date) %>%
+    summarise_each(funs(mean(., na.rm=TRUE), median(., na.rm=TRUE)), steps)
+```
+
+The entire table with the computed mean and median for each day is displayed below
+and the r code to display the table
+
+```{r, results='asis'}
+library(xtable)
+mean_med_steps$date <- as.character(mean_med_steps$date)
+mean_med_steps_xt <- xtable(mean_med_steps, comment = FALSE, auto = TRUE)
+print(mean_med_steps_xt, type = "html", include.rownames = FALSE)
+```
 
 ## What is the average daily activity pattern?
 
+Utilizing the dplyr package I created a new table with the average number of steps
+taken per day by each 5 min interval.
 
+```{r, results='asis'}
+mean_int_steps <- activity %>%
+    group_by(hour_minutes) %>%
+    summarise(Mean_steps = mean(steps, na.rm=TRUE))
+```
+
+The time series plot for the average number of steps by each 5min interval is
+included below
+
+```{r}
+# Need to coerce the hour_minutes column to POSIX class in order to plot the time-series date correctly
+# This will append the current date on the front of the hour_minute data but does not show up in 
+# the plot
+mean_int_steps$hour_minutes <- as.POSIXct(mean_int_steps$hour_minutes, format = "%H:%M")
+plot(mean_int_steps$Mean_steps ~ mean_int_steps$hour_minutes, type = "l", col = "blue", xaxt = "n", 
+     xlab="24Hr Period in 5 min Intervals",ylab="Average # of Steps", main = "Average # of steps Taken through 24 Hour period")
+
+# Improve the limits and label locations on the time series plot
+axis.POSIXct(1, at=seq(as.POSIXlt(min(mean_int_steps$hour_minutes)),as.POSIXlt(max(mean_int_steps$hour_minutes)), by="hour"), 
+    labels=format(seq(as.POSIXlt(min(mean_int_steps$hour_minutes)),as.POSIXlt(max(mean_int_steps$hour_minutes)), by="hour"), "%H:%M"))
+```
+
+The entire table with the time series data for each interval is displayed below
+and the r code to display the table
+
+```{r, results='asis'}
+library(xtable)
+# Coerce the hour_minute data back to character so that the column data prints correctly.
+mean_int_steps$hour_minutes <- as.character(mean_int_steps$hour_minutes)
+# Need to strip off the date information as it's not relevant to the table data
+mean_int_steps$hour_minutes <- substring(mean_int_steps$hour_minutes, 12, 19)
+mean_int_steps_xt <- xtable(mean_int_steps, comment = FALSE, auto = TRUE)
+print(mean_int_steps_xt, type = "html", include.rownames = FALSE)
+```
+&nbsp;
+
+From both the plot and inspection of the raw data, the peak average number of steps taken 
+**occurs between 8:30 to 8:35.**
 
 ## Imputing missing values
 
+There a signficant amount of days where the activity monitor was not worn or taken off
+resulting in no data collection.  To replace the NA data values I created a
+replacement vector which repeats the average number of steps taken for each
+5 min interval.  I then search through the original data set using **which** and
+**is.na** to determine the row locations of the NA data.  This row number vector
+served as the map to replace the missing data with the average for that
+interval.  I then looked for all the row locations which were not NA
+and copied the original data into the new step data.  Following the 
+assignment outline I created a new data table named **activity_new**.
+Instead of writing over the original step data I created a new column
+name **new_steps** with the NA values overwritten with the average for that
+interval.  In anticipation of the next section I also included the code to
+create the dayofweek column which is a factor with 2 levels, either
+weekend or weekday.
 
+```{r, results='asis'}
+# Create repeating vector of the mean steps for each 5 min interval to match the entire dataset
+replace_vector <- rep(mean_int_steps$Mean_steps, 61)
+# Create new dataset to replace NA values with the mean values for each interval
+activity_new <- activity
+# Look for is.na values in the original steps data and replace with mean values in the new steps column
+activity_new$new_steps[which(is.na(activity_new$step))] <- replace_vector[which(is.na(activity_new$step))]
+# Look for !is.na values and copy the original steps data into the new steps column
+activity_new$new_steps[which(!is.na(activity_new$step))] <- activity_new$steps[which(!is.na(activity_new$step))]
+# use ifelse and weekdays function to determine if the day is a weekday or weekend
+activity_new$dayofweek <- as.factor(ifelse(weekdays(activity_new$datetime) %in% c("Saturday", "Sunday"), 'weekend', 'weekday'))
+```
+
+Using the same code previously used to compute the total number of steps taken 
+per day as well as the mean and median for each day.
+
+I utilized the dplyr package to summarise the new number of steps taken by day.
+
+```{r}
+sum_steps_new <- activity_new %>%
+    group_by(date) %>%
+    summarise(Sum_steps = sum(new_steps, na.rm=TRUE))
+```
+
+Here are the first 10 rows of the new output table and the r code to display the table
+
+```{r, results='asis'}
+library(xtable)
+sum_steps_new$date <- as.character(sum_steps_new$date)
+sum_steps_new_xt <- xtable(sum_steps_new[1:10, ], comment = FALSE, auto = TRUE)
+print(sum_steps_new_xt, type = "html", include.rownames = FALSE)
+```
+&nbsp;
+
+The histogram showing the distribution of the new total number of steps taken is shown below:
+
+```{r}
+hist(sum_steps_new$Sum_steps, main = "Number of steps taken per day with NA values replaced", 
+     xlab = "Number of steps per day", ylab = "Occurences", border = "black", col = "blue", ylim = c(0,10), las = 1, breaks = 50, xaxt = "n")
+axis(side = 1, at = seq(0,21500,500), labels = seq(0,21500,500))
+```
+
+Utilizing the dplyr package I calculated the new mean and median step date
+with the step data replaced.
+
+```{r, results='asis'}
+mean_med_steps_new <- activity_new %>%
+    group_by(date) %>%
+    summarise_each(funs(mean(., na.rm=TRUE), median(., na.rm=TRUE)), new_steps)
+```
+
+The entire table with the new computed mean and median for each day is displayed below
+and the r code to display the table
+
+```{r, results='asis'}
+library(xtable)
+mean_med_steps_new$date <- as.character(mean_med_steps_new$date)
+mean_med_steps_new_xt <- xtable(mean_med_steps_new, comment = FALSE, auto = TRUE)
+print(mean_med_steps_new_xt, type = "html", include.rownames = FALSE)
+```
+&nbsp;
+
+With the missing data replaced the histogram distribution was moved more towards
+the overall average number of steps per day. This makes sense since the previous
+days with no data are now set at the average.  Separate from the days with no data
+replacing the missing values did not have much an effect on the mean or median data.
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+Using the **activity_new** dataset I create two new time series plots of 
+average steps taken by either **weekend** or **weekday**.  The panel plot
+and r code is included below.
+
+New average step data table:
+```{r, results='asis'}
+ave_steps_new <- activity_new %>%
+    group_by(hour_minutes, dayofweek) %>%
+    summarise(Ave_steps = mean(new_steps, na.rm=TRUE))
+```
+
+Create the two new time series plots:
+```{r}
+# Need to coerce the hour_minutes column to POSIX class in order to plot the time-series date correctly
+# This will append the current date on the front of the hour_minute data but does not show up in 
+# the plot
+ave_steps_new$hour_minutes <- as.POSIXct(ave_steps_new$hour_minutes, format = "%H:%M")
+# Setup the panel for the 2 plots
+par(mfcol = c(2,1))
+par(mar = c(2,4,1,1))
+# Subset ave_steps_new data by weekday
+with(subset(ave_steps_new, dayofweek == "weekday"), plot(ave_steps_new$Ave_steps ~ ave_steps_new$hour_minutes, 
+    ylab = "Ave steps per interval", xlab = "", type = "l", xaxt = "n", main = "Weekday", col = "blue"))
+# Improve the limits and label locations on the time series plot
+axis.POSIXct(1, at=seq(as.POSIXlt(min(ave_steps_new$hour_minutes)),as.POSIXlt(max(ave_steps_new$hour_minutes)), by="hour"), 
+    labels=format(seq(as.POSIXlt(min(ave_steps_new$hour_minutes)),as.POSIXlt(max(ave_steps_new$hour_minutes)), by="hour"), "%H:%M"))
+
+# Subset ave_steps_new data by weekend
+with(subset(ave_steps_new, dayofweek == "weekend"), plot(ave_steps_new$Ave_steps ~ ave_steps_new$hour_minutes, 
+    ylab = "Ave steps per interval", xlab = "", type = "l", xaxt = "n", main = "Weekend", col = "green"))
+# Improve the limits and label locations on the time series plot
+axis.POSIXct(1, at=seq(as.POSIXlt(min(ave_steps_new$hour_minutes)),as.POSIXlt(max(ave_steps_new$hour_minutes)), by="hour"), 
+    labels=format(seq(as.POSIXlt(min(ave_steps_new$hour_minutes)),as.POSIXlt(max(ave_steps_new$hour_minutes)), by="hour"), "%H:%M"))
+```
+&nbsp;&nbsp;
+
+
+The main differences in ave steps between weekends and weekdays are as follows:  
+1.  The number of steps early in the day are less for weekends vs weekdays  
+2.  The peak step period shifts to much later in the day  
+3.  The number of steps in the evening is higher for weekends compared to weekdays  
+*Assuming the 00:00 interval represents midnight for each day*
