@@ -51,25 +51,25 @@ Here are the first 10 rows of the output table and the r code to display the tab
 
 ```r
 library(xtable)
-sum_steps$date <- sprintf("% 12s",as.character(sum_steps$date))
+sum_steps$date <- as.character(sum_steps$date)
 sum_steps_xt <- xtable(sum_steps[1:10, ], comment = FALSE, auto = TRUE)
 print(sum_steps_xt, type = "html", include.rownames = FALSE)
 ```
 
 <!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Sun Jan 10 11:15:35 2016 -->
+<!-- Sun Jan 10 11:35:39 2016 -->
 <table border=1>
 <tr> <th> date </th> <th> Sum_steps </th>  </tr>
-  <tr> <td>   2012-10-01 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td>   2012-10-02 </td> <td align="right"> 126 </td> </tr>
-  <tr> <td>   2012-10-03 </td> <td align="right"> 11352 </td> </tr>
-  <tr> <td>   2012-10-04 </td> <td align="right"> 12116 </td> </tr>
-  <tr> <td>   2012-10-05 </td> <td align="right"> 13294 </td> </tr>
-  <tr> <td>   2012-10-06 </td> <td align="right"> 15420 </td> </tr>
-  <tr> <td>   2012-10-07 </td> <td align="right"> 11015 </td> </tr>
-  <tr> <td>   2012-10-08 </td> <td align="right"> 0 </td> </tr>
-  <tr> <td>   2012-10-09 </td> <td align="right"> 12811 </td> </tr>
-  <tr> <td>   2012-10-10 </td> <td align="right"> 9900 </td> </tr>
+  <tr> <td> 2012-10-01 </td> <td align="right"> 0 </td> </tr>
+  <tr> <td> 2012-10-02 </td> <td align="right"> 126 </td> </tr>
+  <tr> <td> 2012-10-03 </td> <td align="right"> 11352 </td> </tr>
+  <tr> <td> 2012-10-04 </td> <td align="right"> 12116 </td> </tr>
+  <tr> <td> 2012-10-05 </td> <td align="right"> 13294 </td> </tr>
+  <tr> <td> 2012-10-06 </td> <td align="right"> 15420 </td> </tr>
+  <tr> <td> 2012-10-07 </td> <td align="right"> 11015 </td> </tr>
+  <tr> <td> 2012-10-08 </td> <td align="right"> 0 </td> </tr>
+  <tr> <td> 2012-10-09 </td> <td align="right"> 12811 </td> </tr>
+  <tr> <td> 2012-10-10 </td> <td align="right"> 9900 </td> </tr>
    </table>
 &nbsp;
 
@@ -107,7 +107,7 @@ print(mean_med_steps_xt, type = "html", include.rownames = FALSE)
 ```
 
 <!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Sun Jan 10 11:15:35 2016 -->
+<!-- Sun Jan 10 11:35:39 2016 -->
 <table border=1>
 <tr> <th> date </th> <th> mean </th> <th> median </th>  </tr>
   <tr> <td> 2012-10-01 </td> <td align="right">  </td> <td align="right">  </td> </tr>
@@ -219,7 +219,7 @@ print(mean_int_steps_xt, type = "html", include.rownames = FALSE)
 ```
 
 <!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Sun Jan 10 11:15:35 2016 -->
+<!-- Sun Jan 10 11:35:39 2016 -->
 <table border=1>
 <tr> <th> hour_minutes </th> <th> Mean_steps </th>  </tr>
   <tr> <td> 00:00:00 </td> <td align="right"> 1.7169811 </td> </tr>
@@ -513,22 +513,22 @@ print(mean_int_steps_xt, type = "html", include.rownames = FALSE)
    </table>
 &nbsp;
 
-From both the plot and inspection of the raw data, the peak average number of steps taken 
-**occurs between 8:30 to 8:35.**
+From both the plot and inspection of the raw data, you can see the peak average number 
+of steps taken **occurs between 8:30 to 8:35.**
 
 ## Imputing missing values
 
-There a signficant amount of days where the activity monitor was not worn or taken off
-resulting in no data collection.  To replace the NA data values I created a
-replacement vector which repeats the average number of steps taken for each
-5 min interval.  I then search through the original data set using **which** and
-**is.na** to determine the row locations of the NA data.  This row number vector
-served as the map to replace the missing data with the average for that
-interval.  I then looked for all the row locations which were not NA
-and copied the original data into the new step data.  Following the 
-assignment outline I created a new data table named **activity_new**.
+There is a signficant amount of days where the activity monitor was not worn or
+taken off resulting in no data collection.  To replace the NA data values I 
+created a replacement vector which repeats the average number of steps taken 
+for each 5 min interval.  I then search through the original data set using 
+**which** and **is.na** to determine the row locations of the NA data.  This 
+row number vector served as the map to replace the missing data with the 
+average for that interval.  I then looked for all the row locations which 
+were not NA and copied the original data into the new step data.  Following 
+the assignment outline I created a new data table named **activity_new**.
 Instead of writing over the original step data I created a new column
-name **new_steps** with the NA values overwritten with the average for that
+named **new_steps** with the NA values overwritten with the average for that
 interval.  In anticipation of the next section I also included the code to
 create the dayofweek column which is a factor with 2 levels, either
 weekend or weekday.
@@ -570,7 +570,7 @@ print(sum_steps_new_xt, type = "html", include.rownames = FALSE)
 ```
 
 <!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Sun Jan 10 11:15:36 2016 -->
+<!-- Sun Jan 10 11:35:40 2016 -->
 <table border=1>
 <tr> <th> date </th> <th> Sum_steps </th>  </tr>
   <tr> <td> 2012-10-01 </td> <td align="right"> 10766.18867925 </td> </tr>
@@ -619,7 +619,7 @@ print(mean_med_steps_new_xt, type = "html", include.rownames = FALSE)
 ```
 
 <!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Sun Jan 10 11:15:36 2016 -->
+<!-- Sun Jan 10 11:35:40 2016 -->
 <table border=1>
 <tr> <th> date </th> <th> mean </th> <th> median </th>  </tr>
   <tr> <td> 2012-10-01 </td> <td align="right"> 37.3825996 </td> <td align="right"> 34.11320755 </td> </tr>
@@ -688,7 +688,7 @@ print(mean_med_steps_new_xt, type = "html", include.rownames = FALSE)
 
 With the missing data replaced the histogram distribution was moved more towards
 the overall average number of steps per day. This makes sense since the previous
-days with no data are now set at the average.  Separate from the days with no data
+days with no data are now set at the average.  Separate from the days with no data,
 replacing the missing values did not have much an effect on the mean or median data.
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -736,6 +736,6 @@ axis.POSIXct(1, at=seq(as.POSIXlt(min(ave_steps_new$hour_minutes)),as.POSIXlt(ma
 
 The main differences in ave steps between weekends and weekdays are as follows:  
 1.  The number of steps early in the day are less for weekends vs weekdays  
-2.  The peak step period shifts to much later in the day  
+2.  The peak step period shifts to much later in the day for weekends  
 3.  The number of steps in the evening is higher for weekends compared to weekdays  
 *Assuming the 00:00 interval represents midnight for each day*
